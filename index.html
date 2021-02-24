@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/styles/styles.css">
+    <script src="/assets/" defer></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="main-container">
+        <div id="monster-health-container" class="flex-cntr-cntr">
+            <ul id="monster-health-ul" class="ul-text">
+                <li class="ui-text">Health:<span id="monster-health-span">50</span></li>
+            </ul>
+        </div>
+        <div id="visual-container" class="flex-cntr-cntr">
+            <h1>DUNGEON CRAWLER</h1>
+            <div id="item-modal" class="flex-cntr-cntr">
+                <div id="item-modal-upper" class="flex-cntr-cntr">
+                    <img id="item-modal-img" src="" alt="">
+                    <p id="item-modal-text">Something about the item!</p>
+                </div>
+                <div id="item-modal-lower" class="flex-cntr-cntr">
+                    <button id="item-modal-btn" class="btn btn-yellow">OK</button>
+                </div>
+            </div>
+        </div>
+        <div id="ui-container">
+            <div id="start-btn-ui-container" class="flex-cntr-cntr">
+                <button id="start-game-btn" class="btn">Start Game</button>
+            </div>
+            <div id="game-info-container" class="flex-cntr-cntr">
+                <ul id="health-potions-ul" class="ul-text">
+                    <li class="ui-text">Health: <span id="health-span">100</span></li>
+                    <li class="ui-text">Potions: <span id="potions-span">1</span></li>
+                </ul>
+                <ul id="monsters-weapon-ul" class="ul-text">
+                    <li class="ui-text">Monsters: <span id="monsters-span">0/3</span></li>
+                    <li class="ui-text">Weapon: <span id="weapon-span">Dagger</span></li>
+                </ul>
+            </div>
+            <div id="non-combat-ui" class="flex-cntr-cntr">
+                <button id="move-btn" class="btn btn-green">Move Forward</button>
+                <button id="search-btn" class="btn btn-yellow">Search</button>
+                <button id="heal-btn" class="btn btn-blue">Heal</button>
+            </div>
+            <div id="combat-ui" class="flex-cntr-cntr">
+                <button id="normal-atk-btn" class="btn btn-yellow">Normal Attack</button>
+                <button id="big-atk-btn" class="btn btn-red">Big Attack</button>
+                <button id="special-atk-btn" class="btn btn-blue">Special Attack</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
