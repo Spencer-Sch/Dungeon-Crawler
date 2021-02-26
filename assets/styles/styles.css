@@ -11,10 +11,30 @@ body {
     padding: 0;
 }
 
+button:focus {
+    outline: none;
+}
+
 .flex-cntr-cntr {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+/* ================================================
+Triggered Styles
+=================================================*/
+
+.invisible {
+    display: none;
+}
+
+/* ================================================
+Image Styles
+=================================================*/
+
+.dungeon-images {
+    height: 100%;
 }
 
 /* ================================================
@@ -24,8 +44,7 @@ Container Styles
 #main-container {
     width: 75%;
     height: 75vh;
-    margin: 0 auto;
-    /* top: 5em; */
+    margin: 5em auto 0 auto;
     border: solid 2px black;
 }
 
@@ -34,7 +53,6 @@ Container Styles
     padding: 0 2em 0 2em;
     border-right: solid 2px black;
     border-bottom: solid 2px black;
-    /* display: none; */
 }
 
 #visual-container {
@@ -81,8 +99,7 @@ Container Styles
     width: 100%;
     height: 100%;
     background-color: #555157;
-    border: solid 2px yellow;
-    display: none;
+    border: solid 2px gray;
 }
 
 #game-info-container {
@@ -91,22 +108,18 @@ Container Styles
     background-color: #555157;
     width: 50%;
     border: solid 2px gray;
-    /* display: none; */
-
 }
 
 #non-combat-ui {
     width: 50%;
     background-color: #555157;
     border: solid 2px gray;
-    /* display: none; */
 }
 
 #combat-ui {
     width: 50%;
     background-color: #555157;
     border: solid 2px gray;
-    display: none;
 }
 
 /* ================================================
@@ -150,8 +163,10 @@ Button Styles
     background-color: white;
     font-family:'Trebuchet MS', Arial, sans-serif;
     font-size: 1.8rem;
-    padding: 0.5rem;
+    padding: 0.4rem;
     margin: 0.5rem;
+    border: none;
+    cursor: pointer;
 }
 
 .btn-blue {
@@ -188,8 +203,11 @@ Button Styles
     border: solid 0.3rem darkgreen;
 }
 
-.btn-green:hover,
-.btn-green:focus {
+.btn-green:hover {
     color: white;
     background-color: darkgreen;
+}
+
+.btn-green:focus {
+    
 }
