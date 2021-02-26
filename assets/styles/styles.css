@@ -57,7 +57,7 @@ Container Styles
 
 #visual-container {
     height: 75%;
-    background-color: #343036;
+    background-color: black;
 }
 
 #item-modal {
@@ -145,6 +145,26 @@ Text Styles
     color: white;
 }
 
+#health-span {
+    font-weight: 900;
+    color: crimson;
+}
+
+#potions-span {
+    font-weight: 900;
+    color: royalblue;
+}
+
+#monsters-span {
+    font-weight: 900;
+    color: darkgreen;
+}
+
+#weapon-span {
+    font-weight: 900;
+    color: goldenrod;
+}
+
 .ui-text, #item-modal-text {
     color: white;
     font-family:'Trebuchet MS', Arial, sans-serif;
@@ -206,8 +226,4 @@ Button Styles
 .btn-green:hover {
     color: white;
     background-color: darkgreen;
-}
-
-.btn-green:focus {
-    
 }
