@@ -61,17 +61,21 @@ Container Styles
 }
 
 #item-modal {
+    position: absolute;
     flex-direction: column;
     height: 33%;
     width: 25%;
     background-color: #343036;
     border: solid 2px black;
+    z-index: 100;
 }
 
 #item-modal-upper {
     flex-direction: column;
     width: 100%;
     height: 75%;
+    padding: 0.8em;
+    text-align: center;
 }
 
 #item-modal-img {
@@ -86,8 +90,15 @@ Container Styles
     border-top: solid 2px black;
 }
 
-#item-modal {
-    position: absolute;
+#backdrop {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 10;
+    pointer-events: all;
 }
 
 #ui-container {
@@ -193,8 +204,7 @@ Button Styles
     border: solid 0.3rem royalblue;
 }
 
-.btn-blue:hover,
-.btn-blue:focus {
+.btn-blue:hover {
     color: white;
     background-color: royalblue;
 }
@@ -203,8 +213,7 @@ Button Styles
     border: solid 0.3rem crimson;
 }
 
-.btn-red:hover,
-.btn-red:focus {
+.btn-red:hover {
     color: white;
     background-color: crimson;
 }
@@ -213,8 +222,7 @@ Button Styles
     border: solid 0.3rem goldenrod;
 }
 
-.btn-yellow:hover,
-.btn-yellow:focus {
+.btn-yellow:hover {
     color: white;
     background-color: goldenrod;
 }
