@@ -51,8 +51,8 @@ Container Styles
 #monster-health-container {
     position: absolute;
     padding: 0 2em 0 2em;
-    border-right: solid 2px black;
-    border-bottom: solid 2px black;
+    border: solid 0.3rem darkgreen;
+    background-color: #343036;
 }
 
 #visual-container {

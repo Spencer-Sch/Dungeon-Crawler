@@ -9,6 +9,7 @@ const dungeonData = {
                 normalAtkModifier: 5,
                 bigAtkModifier: 10,
                 specialAtk: null, // make a function?
+                weaponLvl: 0,
             },
             sword: {
                 baseAtkDmg: 15,
@@ -16,6 +17,7 @@ const dungeonData = {
                 bigAtkModifier: 15,
                 specialAtk: null, // make a function?
                 // rarityModifier: 5,
+                weaponLvl: 1,
             },
             axe: {
                 baseAtkDmg: 20,
@@ -23,6 +25,7 @@ const dungeonData = {
                 bigAtkModifier: 30,
                 specialAtk: null, // make a function?
                 // rarityModifier: 10,
+                weaponLvl: 2,
             },
             wand: {
                 baseAtkDmg: 0,
@@ -30,6 +33,7 @@ const dungeonData = {
                 bigAtkModifier: 0,
                 specialAtk: null, // spend all potions = insta kill
                 // rarityModifier: 25,
+                weaponLvl: 3,
             },
 
         },
@@ -43,11 +47,13 @@ const dungeonData = {
         playerHealth: 100,
         playerPotionCount: 1,
         playerCurrentWeapon: 'DAGGER',
-        playerPrevWeapons: [],
+        playerCurrentWeaponLvl: 0,
+        playerPrevWeapons: ['DAGGER'],
     },
     monsterData: {
         monsterCount: 0,
-        monsterModifier: 0,
+        findMonsterModifier: 0,
+        showMonsterNearbyMessage: true,
         monsterLevels: {
             level_1: {
                 monsterHealth: 100,
@@ -93,6 +99,8 @@ const BTN_START_GAME = document.getElementById('start-game-btn');
 const START_BTN_CONTAINER = document.getElementById('start-btn-ui-container');
 const GAME_INFO_CONTAINER = document.getElementById('game-info-container');
 const NON_COMBAT_UI = document.getElementById('non-combat-ui');
+const COMBAT_UI = document.getElementById('combat-ui');
+const MONSTER_HEALTH = document.getElementById('monster-health-container');
 const MOVE_BTN = document.getElementById('move-btn');
 const SEARCH_BTN = document.getElementById('search-btn');
 const DUNGEON_IMG = document.getElementById('corridor-img');
@@ -113,7 +121,6 @@ DUNGEON_IMG.setAttribute('src', `/assets/images/corridor${Math.floor(Math.random
 // Initialize the set that will keep track of which weapons the player has had throughout the game.
 const prevWeaponSet = new Set();
 prevWeaponSet.add('DAGGER');
-PLAYER_DATA.playerPrevWeapons = prevWeaponSet;
 
 const prevImgNum = [];
 
@@ -128,7 +135,6 @@ const startGameHandler = () => {
 
 // This chooses and displays the new dungeon image each time the 'Move Forward' btn is clicked.
 const dungeonImageHandler = () => {
-    ROOM_DATA.searchedCurrentRoom = false;
     let randCorridorNum = Math.floor(Math.random() * 8 + 1);
     if (prevImgNum[0] === randCorridorNum) {
         if (randCorridorNum === 8) {
@@ -146,6 +152,40 @@ const dungeonImageHandler = () => {
     }
 };
 
+const encounterMonster = () => {
+    console.log('MONSTER ENCOUNTER!');
+    NON_COMBAT_UI.classList.add('invisible');
+    COMBAT_UI.classList.remove('invisible');
+    MONSTER_HEALTH.classList.remove('invisible');
+};
+
+// Checking to see if the player encounters a monster or not
+const checkMonsterModifier = () => {
+    if (MONSTER_DATA.findMonsterModifier > 50) {
+        let findMonsterCheckValue = MONSTER_DATA.findMonsterModifier + Math.floor(Math.random() * 50 + 1);
+        console.log(findMonsterCheckValue);
+        if (findMonsterCheckValue >= 100) {
+            encounterMonster();
+        } else if (findMonsterCheckValue > 50 && findMonsterCheckValue < 100) {
+            if (MONSTER_DATA.showMonsterNearbyMessage) {
+                modalAlert(`I hear something nearby...`);
+                MONSTER_DATA.showMonsterNearbyMessage = false;
+            } else {
+                MONSTER_DATA.showMonsterNearbyMessage = true;
+            }
+        }
+    }
+};
+
+// Triggered when the 'Move Forward' btn is clicked
+const playerMovementHandler = () => {
+    dungeonImageHandler();
+    ROOM_DATA.searchedCurrentRoom = false;
+    MONSTER_DATA.findMonsterModifier += 3;
+    console.log('Find Monster Modifier: ' + MONSTER_DATA.findMonsterModifier);
+    checkMonsterModifier();
+};
+
 const toggleModal = () => {
     MODAL_BACKDROP.classList.toggle('invisible');
 };
@@ -160,11 +200,6 @@ const closeModal = () => {
     toggleModal();
 };
 
-const gainPotion = () => {
-    PLAYER_DATA.playerPotionCount++;
-    POTIONS_COUNTER.textContent = PLAYER_DATA.playerPotionCount;
-};
-
 const modalAlert = (message) => {
     MODAL_TEXT.textContent = message;
     openModal();
@@ -172,40 +207,63 @@ const modalAlert = (message) => {
     MODAL_BTN.addEventListener('click', closeModal);
 };
 
-// HAVING PROBLEM: there is some sort of disconnect between what weapons the player has found/currnetly has and what appears in modal text alerts when searching the dungeon.
+const gainPotion = () => {
+    modalAlert(`You found a potion!`);
+    PLAYER_DATA.playerPotionCount++;
+    POTIONS_COUNTER.textContent = PLAYER_DATA.playerPotionCount;
+};
+
 // This swaps out the player's current weapon with the new one they just found.
-const equipNewWeapon = (weapon) => {
+const equipNewWeapon = (weapon, newWeaponLvl) => {
+    // Has the player had this weapon before?
     if (!prevWeaponSet.has(weapon)) {
-        modalAlert(`You found a(n) ${weapon}!`);
-        prevWeaponSet.add(PLAYER_DATA.playerCurrentWeapon);
-        PLAYER_DATA.playerCurrentWeapon = weapon;
-        CURRENT_WEAPON_UI.textContent = PLAYER_DATA.playerCurrentWeapon;
+        // Validate if the found weapon is better or worse than current weapon
+        if (newWeaponLvl > PLAYER_DATA.playerCurrentWeaponLvl) {
+            // If found weapon is better, then take it
+            modalAlert(`You found a(n) ${weapon}!`);
+            prevWeaponSet.add(weapon);
+            PLAYER_DATA.playerCurrentWeapon = weapon;
+            PLAYER_DATA.playerCurrentWeaponLvl = newWeaponLvl;
+            CURRENT_WEAPON_UI.textContent = weapon;
+        } else {
+            // If found weapon is not better, then leave it
+            modalAlert(`You found a(n) ${weapon}, but who needs that?`);
+            prevWeaponSet.add(weapon);
+        }
     } else {
         modalAlert(`Just another rusty ${weapon}...`);
     }
-    console.log("your new weapon is:" + PLAYER_DATA.playerCurrentWeapon);
-    console.log(PLAYER_DATA.playerPrevWeapons);
 };
 
 // This determains which weapon the player found.
 const selectNewWeapon = () => {
     let newWeapon = "";
+    let weaponLvl;
     let randWeaponNum = Math.floor(Math.random() * 100 + 1);
     if (randWeaponNum <= 50) {
-        newWeapon = "DAGGER"
+        newWeapon = "DAGGER";
+        weaponLvl = WEAPON_DAGGER.weaponLvl;
     } else if (randWeaponNum > 50 && randWeaponNum <= 75) {
         newWeapon = "SWORD";
+        weaponLvl = WEAPON_SWORD.weaponLvl;
     } else if (randWeaponNum > 75 && randWeaponNum <= 92) {
         newWeapon = "AXE";
+        weaponLvl = WEAPON_AXE.weaponLvl;
     }  else if (randWeaponNum > 92) {
         newWeapon = "WAND";
+        weaponLvl = WEAPON_WAND.weaponLvl;
     }
-    equipNewWeapon(newWeapon);
+    equipNewWeapon(newWeapon, weaponLvl);
 };
 
-// const badFindHandler = (num) => {
-
-// };
+const badFindHandler = (num) => {
+    if (num > 3) {
+        modalAlert(`You found nothing.`);
+    } else {
+        modalAlert(`*LOUD NOISE* I hope nothing heard that...`);
+        MONSTER_DATA.findMonsterModifier += 8;
+    }
+};
 
 // This determains whether the good thing the player found is a weapon or a potion.
 const goodFindHandler = (num) => {
@@ -222,12 +280,11 @@ const searchDungeonHandler = () => {
         ROOM_DATA.searchedCurrentRoom = true;
         let randSearchNum1 = Math.floor(Math.random() * 10 + 1);
         let randSearchNum2 = Math.floor(Math.random() * 10 + 1);
-        console.log('Good vs Bad Find Number:' + randSearchNum1);
         if (randSearchNum1 > 7) { // This determains if the player 'rolled' high enough to find something good or not.
             goodFindHandler(randSearchNum2);
         } else {
             console.log("BAD FIND");
-            // badFindHandler(randSearchNum2);
+            badFindHandler(randSearchNum2);
         }
     } else {
         modalAlert('Oops, you\'ve already searched this room!');
@@ -235,5 +292,5 @@ const searchDungeonHandler = () => {
 };
 
 BTN_START_GAME.addEventListener('click', startGameHandler);
-MOVE_BTN.addEventListener('click', dungeonImageHandler);
+MOVE_BTN.addEventListener('click', playerMovementHandler);
 SEARCH_BTN.addEventListener('click', searchDungeonHandler);
